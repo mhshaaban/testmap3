@@ -1,52 +1,42 @@
 <!DOCTYPE html>
+<html>
 <meta charset="utf-8">
+<head>
 <style>
-body {
-  margin: 25px;
-}
-
-#map {
-  width: 900px;
-  height: 600px;
-  border: 1px solid silver;
-  background: #E6E6E6;
-}
-
 </style>
+</head>
 <body>
+<div id="graph"></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script> <!--  need add this to read topojson format -->
+
 <script>
 
-var width = 960,
-    height = 600;
+//Width and height
+    var w = 800;
+    var h = 800;
+var colors = d3.scale.category20();
+    var projection = d3.geo.mercator()
+                       .translate([w/2, h/2]);
 
+    var path = d3.geo.path()
+                 .projection(projection);
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    //Define path generator
+    var path = d3.geo.path();
 
+    //Create SVG element
+    var svg = d3.select("body").append("svg").attr({width: w, height: h});
 
+    //Load in GeoJSON data
+    d3.json("map.json", function(json) {
 
-d3.json("map.json", function(error, cro) {
-  if (error) return console.error(error);
-
-  
-  var projection = d3.geo.mercator()
-    .center([15, 37.5]) // x to left, y to bottom
-    .scale(5400)
-    .translate([width / 3, height * 2]);
-    
-
-  var path = d3.geo.path()
-    .projection(projection);  
-
-  svg.append('g')
-      .attr('class', 'features')
-    .selectAll('path')
-      .data(features.features)
-    .enter().append('path')
-      .attr('d', path);
-});      
-
+        //Bind data and create one path per GeoJSON feature
+        svg.selectAll("path")
+           .data(json.features)
+           .enter()
+           .append("path")
+           .attr("d", path)
+           .style("fill", function(d,i){return colors(i)});
+   });
 </script>
