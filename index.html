@@ -31,13 +31,18 @@ var projection = d3.geo.mercator()
 var path = d3.geo.path()
   				.projection(projection);
 
-  d3.json("map.json", function(error, mamluk) {
+  d3.json("map.json", function(error, features) {
 
-
-  	svg.append("path")
-      .attr("id", "area")
-      .attr("d", path);
-
+svg.append('g')
+      .attr('class', 'features')
+    
+    .selectAll('path')
+   
+    
+      .data(features.features)
+    .enter().append('path')
+     
+      .attr('d', path);
 	});
 
 </script>
