@@ -57,6 +57,11 @@ d3.json("map.json", function(error, features) {
       .attr('d', path);
 });
 
+function doZoom() {
+  mapFeatures.attr("transform",
+    "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+}
+
 </script>
 </body>
 </html>
